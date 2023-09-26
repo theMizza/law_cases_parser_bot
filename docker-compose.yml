@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+  bot:
+    build: .
+    container_name: bot
+    command: >
+      sh -c "python3 utils.py &&
+             python3 bot.py"
+    volumes:
+      - .:/usr/src/app/
+    restart: always
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+
+volumes:
+  db:
+
